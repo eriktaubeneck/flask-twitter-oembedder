@@ -42,3 +42,10 @@ or later at configuration time using the `init` method:
     
     twitter_oembedder.init(app,cache)
 
+Flask-Twitter-OEmbedder users the `@app.context_processor` decorator to expose the `oembed_tweet()` function inside of the Jinja2 templates. In order to use this for some `tweet_id`, just include the following in your template
+
+    {{ oembed_tweet(tweet_id) }}
+
+and the corresponding html for that tweet will be embedded in the page.  You should also see the [Embedded Tweets](https://dev.twitter.com/docs/embedded-tweets) documentation from Twitter, and will need to include the following JavaScript somewhere in any page you want to embed a tweet:
+
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
