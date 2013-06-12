@@ -4,7 +4,7 @@ Flask-Twitter-OEmbedder
 
 Embedded tweets in Flask Jinja2 Templates with only the Tweet_ID
 """
-from setuptools import setup
+from distutils.core import setup
 
 setup(
     name = "Flask-Twitter-OEmbedder",
@@ -15,12 +15,5 @@ setup(
     author_email = 'erik.taubeneck@gmail.com',
     description = 'Embedded tweets in Flask Jinja2 Templates with only the Tweet_ID',
     py_modules = ['flask_twitter_oembedder'],
-    include_package_data = True,
     platforms = 'any',
-    install_requires = [
-        'Flask',
-        'requests',
-        'requests-oauthlib',
-        'Flask-Cache'
-        ]
 )
