@@ -54,9 +54,13 @@ and the corresponding html for that tweet will be embedded in the page.  You sho
 Debuging
 --------
 
-By default, Flask-Twitter-OEmbedder will return an empty string for any input into the function which Twitter does not return an appropriate response to. This is ideal in production, as you likely don't want your entire application to crash because a Tweet ID doesn't work (this could happen not only in error, for example the tweeter could have deleted their tweet). However, when debugging it may be desirable to actually raise the error and bring you to the build in Flask debugger (assuming you have set `app.debug = True` as well). To do this, simply pass `debug = True` into the initialization of the `TwitterOEmbedder` object:
+By default, Flask-Twitter-OEmbedder will return an empty string for any input into the function which Twitter does not return an appropriate response to. This is ideal in production, as you likely don't want your entire application to crash because a Tweet ID doesn't work (this could happen not only in error, for example the tweeter could have deleted their tweet or the twitter API could be down for the moment). However, when debugging it may be desirable to actually raise the error and bring you to the build in Flask debugger (assuming you have set `app.debug = True` as well). By default, Flask-Twitter-OEmbedder will inherit the `app.debug` state, however you can override this with the following:
 
     twitter_oembedder = TwitterOEmbedder(app,cache,debug=True)
+
+or
+
+    twitter_oembedder = TwitterOEmbedder(app,cache,debug=False)
 
 or
 
@@ -64,4 +68,10 @@ or
     ...
     twitter_oembedder.init(app,cache,debug=True)
 
-It should also be noted that if you turn `debug=True` on after using Flask-Twitter-OEmbedder with `debug=False` (the default), you will need to clear your cache, otherwise existing calls will returned the cached empty string rather than raising the expected exception.
+or
+
+    twitter_oembedder = TwitterOEmbedder()
+    ...
+    twitter_oembedder.init(app,cache,debug=False)
+
+It should also be noted that when changing the debug state, you should clear your cache, otherwise existing calls will returned the cached result.

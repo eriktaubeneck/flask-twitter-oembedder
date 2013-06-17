@@ -4,10 +4,10 @@ from flask import Markup
 
 class TwitterOEmbedder(object):
     
-    def __init__(self, app=None, cache=None, debug=False):
+    def __init__(self, app=None, cache=None, debug=None):
         if app is not None and cache is not None:
             self.init(app, cache, debug)
-    def init(self, app, cache, debug=False):
+    def init(self, app, cache, debug=None):
         @app.context_processor
         def tweet_processor():
             @cache.memoize(timeout=60*60*24*356)
@@ -22,7 +22,7 @@ class TwitterOEmbedder(object):
                 try:
                     tweet_html = Markup(r.json()[u'html'])
                 except KeyError as e:
-                    if debug:
+                    if debug or (debug is None and app.debug):
                         raise e
                     else:
                         return ''
