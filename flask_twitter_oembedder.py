@@ -5,7 +5,7 @@ from flask import Markup
 class TwitterOEmbedder(object):
     
     def __init__(self, app=None, cache=None, debug=None):
-        if app is not None and cache is not None:
+        if app and cache:
             self.init(app, cache, debug)
     def init(self, app, cache, debug=None):
         @app.context_processor
@@ -17,8 +17,7 @@ class TwitterOEmbedder(object):
                               app.config['TWITTER_ACCESS_TOKEN'],
                               app.config['TWITTER_TOKEN_SECRET'])
                 url = 'https://api.twitter.com/1.1/statuses/oembed.json'
-                payload = {'id':tweet_id}
-                r = requests.get(url, params=payload, auth=auth)
+                r = requests.get(url, params={'id':tweet_id}, auth=auth)
                 try:
                     tweet_html = Markup(r.json()[u'html'])
                 except KeyError as e:
