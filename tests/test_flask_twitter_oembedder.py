@@ -31,7 +31,7 @@ class FlaskStaticTest(TestCase):
 
     @httpretty.activate    
     def test_oembed_tweet_valid_id_debug_off(self):
-        with open('data/99530515043983360.json') as f:
+        with open('tests/data/99530515043983360.json') as f:
             httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=99530515043983360',
                 body = f.read())
         response = self.client.get('/')
@@ -41,7 +41,7 @@ class FlaskStaticTest(TestCase):
     
     @httpretty.activate
     def test_oembed_tweet_invaild_id_debug_off(self):
-        with open('data/abc.json') as f:
+        with open('tests/data/abc.json') as f:
             httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=abc',
                 body = f.read())
         response = self.client.get('/')
@@ -52,7 +52,7 @@ class FlaskStaticTest(TestCase):
     @httpretty.activate    
     def test_oembed_tweet_invalid_id_debug_on(self):
         self.twitter_oembedder.init(self.app, self.cache, debug=True)
-        with open('data/abc.json') as f:
+        with open('tests/data/abc.json') as f:
             httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=abc',
                 body = f.read())
         response = self.client.get('/')
