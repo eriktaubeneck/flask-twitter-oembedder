@@ -29,24 +29,30 @@ Twitter also requires you to cache the html that you receive from this endpoint.
 
     from flask import Flask
     from flask.ext.twitter_oembedder import TwitterOEmbedder
-    
+
     app = Flask(__name__)
     twitter_oembedder = TwitterOEmbedder(app,cache)
 
 or later at configuration time using the `init` method:
 
     twitter_oembedder = TwitterOEmbedder()
-    
+
     app = Flask(__name__)
     cache = Cache(app)
-    
+
     twitter_oembedder.init(app,cache)
 
 Flask-Twitter-OEmbedder users the `@app.context_processor` decorator to expose the `oembed_tweet()` function inside of the Jinja2 templates. In order to use this for some `tweet_id`, just include the following in your template
 
     {{ oembed_tweet(tweet_id) }}
 
-and the corresponding html for that tweet will be embedded in the page.  You should also see the [Embedded Tweets](https://dev.twitter.com/docs/embedded-tweets) documentation from Twitter, and will need to include the following JavaScript somewhere in any page you want to embed a tweet:
+and the corresponding html for that tweet will be embedded in the page.  You should also see the [Embedded Tweets](https://dev.twitter.com/docs/embedded-tweets) documentation from Twitter.
+
+By default, twitter will include the following inclusion of `widget.js` in the embedded tweet. However, if you want to track intensions, you can omit this reference by calling the `oembed_tweet` fuction the following way:
+
+    {{ oembed_tweet(tweet_id, omit_script=True) }}
+
+If you do this, you will need to include the following JavaScript somewhere in the page:
 
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
