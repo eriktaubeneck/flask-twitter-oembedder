@@ -12,9 +12,9 @@ class TwitterOEmbedder(object):
         def tweet_processor():
             @cache.memoize(timeout=60*60*24*356)
             def oembed_tweet(tweet_id,
-                             omit_script=False,
                              access_token=app.config['TWITTER_ACCESS_TOKEN'],
-                             token_secret=app.config['TWITTER_TOKEN_SECRET']):
+                             token_secret=app.config['TWITTER_TOKEN_SECRET'],
+                             omit_script=False):
                 auth = OAuth1(app.config['TWITTER_CONSUMER_KEY'],
                               app.config['TWITTER_CONSUMER_SECRET'],
                               access_token,
