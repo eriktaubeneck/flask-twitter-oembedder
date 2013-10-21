@@ -25,6 +25,8 @@ Since the Twitter API V1 has been officially shut down, the V1.1 requires OAuth 
     app.config['TWITTER_ACCESS_TOKEN'] = 'access_token'
     app.config['TWITTER_TOKEN_SECRET'] = 'token_secret'
 
+The `twitter_access_token` and `twitter_token_secret` can also be passed into the `oembed_tweet` function as they may change if you have multiple users authenticating into your site.
+
 Twitter also requires you to cache the html that you receive from this endpoint. Flask-Twitter-OEmbedder is designed to work with [Flask-Cache](http://pythonhosted.org/Flask-Cache/). The `app` and `cache` object can either be submitted when the `Twitter_OEmbedder` object is created, as so
 
     from flask import Flask
