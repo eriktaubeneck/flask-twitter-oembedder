@@ -8,7 +8,7 @@ from setuptools import setup
 
 setup(
     name = "Flask-Twitter-OEmbedder",
-    version = '0.1.4',
+    version = '0.1.5',
     url = 'https://github.com/eriktaubeneck/flask-twitter-oembedder',
     license = 'MIT',
     author = 'Erik Taubeneck',
