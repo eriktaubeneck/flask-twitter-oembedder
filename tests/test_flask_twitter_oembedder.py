@@ -15,21 +15,30 @@ class FlaskStaticTest(TestCase):
         app.config['TWITTER_CONSUMER_SECRET'] = 'twitter_consumer_secret'
         app.config['TWITTER_ACCESS_TOKEN'] = 'twitter_access_token'
         app.config['TWITTER_TOKEN_SECRET'] = 'twitter_token_secret'
-        self.cache = Cache(app)      
+        self.cache = Cache(app)
         self.twitter_oembedder = TwitterOEmbedder(app,self.cache)
 
         @app.route('/')
         def index():
             return render_template_string('')
-        
+
         return app
 
 
+    def test_big_timeout_exception(self):
+        try:
+            self.twitter_oembedder.init(self.app,
+                                        self.cache,
+                                        timeout=60*60*24*365*2)
+            assert False
+        except Exception as e:
+            self.assertIsInstance(e,Exception)
+
     def test_jinja_oembed_tweet_avaliable(self):
         response = self.client.get('/')
-        assert type(self.get_context_variable('oembed_tweet')) is types.FunctionType
+        self.assertIsInstance(self.get_context_variable('oembed_tweet'), types.FunctionType)
 
-    @httpretty.activate    
+    @httpretty.activate
     def test_oembed_tweet_valid_id_debug_off(self):
         with open('tests/data/99530515043983360.json') as f:
             httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=99530515043983360',
@@ -37,8 +46,8 @@ class FlaskStaticTest(TestCase):
         response = self.client.get('/')
         oembed_tweet = self.get_context_variable('oembed_tweet')
         valid = oembed_tweet('99530515043983360')
-        assert type(valid) is Markup
-    
+        self.assertIsInstance(valid, Markup)
+
     @httpretty.activate
     def test_oembed_tweet_invaild_id_debug_off(self):
         with open('tests/data/abc.json') as f:
@@ -47,9 +56,9 @@ class FlaskStaticTest(TestCase):
         response = self.client.get('/')
         oembed_tweet = self.get_context_variable('oembed_tweet')
         invalid = oembed_tweet('abc')
-        assert invalid is ''
-    
-    @httpretty.activate    
+        self.assertIs(invalid,'')
+
+    @httpretty.activate
     def test_oembed_tweet_invalid_id_debug_on(self):
         self.twitter_oembedder.init(self.app, self.cache, debug=True)
         with open('tests/data/abc.json') as f:
@@ -61,11 +70,4 @@ class FlaskStaticTest(TestCase):
             invalid = oembed_tweet('abc')
             assert False
         except Exception as e:
-            assert type(e) is KeyError
-    
-
-
-
-
-
-
+            self.assertIsInstance(e, KeyError)

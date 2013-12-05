@@ -13,12 +13,15 @@ class TwitterOEmbedder(object):
             return (args[0], kwargs.get('omit_script', False))
 
         twitter_timeout = 60*60*24*365
+        if timeout > twitter_timeout:
+            raise Exception("TwitterOEmbedder: Cache expiry should not exceed 1 year "
+                            "per Twitter API specification")
         max_timeout = {'saslmemcached':60*60*24*30,
                        'simple': twitter_timeout}
 
         if not timeout:
             default_timeout = app.config.get('CACHE_DEFAULT_TIMEOUT', 300)
-            timeout = min(max_timeout.get(app.config('CACHE_TYPE', default_timeout)),
+            timeout = min(max_timeout.get(app.config.get('CACHE_TYPE', default_timeout)),
                           twitter_timeout)
 
         @app.context_processor
