@@ -8,13 +8,22 @@ class TwitterOEmbedder(object):
         if app and cache:
             self.init(app, cache, debug)
 
-    def init(self, app, cache, debug=None):
+    def init(self, app, cache, timeout=None, debug=None):
         def _cache_key(func, *args, **kwargs):
             return (args[0], kwargs.get('omit_script', False))
 
+        twitter_timeout = 60*60*24*365
+        max_timeout = {'saslmemcached':60*60*24*30,
+                       'simple': twitter_timeout}
+
+        if not timeout:
+            default_timeout = app.config.get('CACHE_DEFAULT_TIMEOUT', 300)
+            timeout = min(max_timeout.get(app.config('CACHE_TYPE', default_timeout)),
+                          twitter_timeout)
+
         @app.context_processor
         def tweet_processor():
-            @cache.memoize(timeout=60*60*24*30)
+            @cache.memoize(timeout=timeout)
             def oembed_tweet(tweet_id,
                              access_token=app.config['TWITTER_ACCESS_TOKEN'],
                              token_secret=app.config['TWITTER_TOKEN_SECRET'],
