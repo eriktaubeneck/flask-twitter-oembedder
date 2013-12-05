@@ -7,10 +7,14 @@ class TwitterOEmbedder(object):
     def __init__(self, app=None, cache=None, debug=None):
         if app and cache:
             self.init(app, cache, debug)
+
     def init(self, app, cache, debug=None):
+        def _cache_key(func, *args, **kwargs):
+            return (args[0], kwargs.get('omit_script', False))
+
         @app.context_processor
         def tweet_processor():
-            @cache.memoize(timeout=60*60*24*356)
+            @cache.memoize(timeout=60*60*24*30)
             def oembed_tweet(tweet_id,
                              access_token=app.config['TWITTER_ACCESS_TOKEN'],
                              token_secret=app.config['TWITTER_TOKEN_SECRET'],
@@ -31,4 +35,5 @@ class TwitterOEmbedder(object):
                     else:
                         return ''
                 return tweet_html
+            oembed_tweet.make_cache_key = _cache_key
             return dict(oembed_tweet=oembed_tweet)
