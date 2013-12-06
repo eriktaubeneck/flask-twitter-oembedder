@@ -1,6 +1,8 @@
 Flask Twitter OEmbedder
 =======================
 
+[![Build Status](https://travis-ci.org/eriktaubeneck/flask-twitter-oembedder.png?branch=master)](https://travis-ci.org/eriktaubeneck/flask-twitter-oembedder)
+
 Purpose
 -------
 

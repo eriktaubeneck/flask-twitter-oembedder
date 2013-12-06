@@ -18,7 +18,7 @@ setup(
     zip_safe=False,
     platforms = 'any',
     include_package_data=True,
-    test_suite="tests",
+    test_suite="nose.collector",
     install_requires=[
         'Flask',
         'Flask-Cache',
@@ -26,7 +26,9 @@ setup(
         'requests_oauthlib',
         ],
     tests_require=[
+        'nose',
         'Flask-Testing',
+        'blinker',
         'Flask-Cache',
         'httpretty',
         ],
