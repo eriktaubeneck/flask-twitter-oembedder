@@ -71,3 +71,54 @@ class FlaskStaticTest(TestCase):
             assert False
         except Exception as e:
             self.assertIsInstance(e, KeyError)
+
+    @httpretty.activate
+    def test_oembed_tweet_valid_id_app_debug_on(self):
+        self.app.config['DEBUG'] = True
+        self.twitter_oembedder.init(self.app, self.cache)
+        with open('tests/data/99530515043983360.json') as f:
+            httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=99530515043983360',
+                body = f.read())
+        response = self.client.get('/')
+        oembed_tweet = self.get_context_variable('oembed_tweet')
+        valid = oembed_tweet('99530515043983360')
+        self.assertIsInstance(valid, Markup)
+
+    @httpretty.activate
+    def test_oembed_tweet_invalid_id_app_debug_on(self):
+        self.app.config['DEBUG'] = True
+        self.twitter_oembedder.init(self.app, self.cache)
+        with open('tests/data/abc.json') as f:
+            httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=abc',
+                body = f.read())
+        response = self.client.get('/')
+        oembed_tweet = self.get_context_variable('oembed_tweet')
+        try:
+            invalid = oembed_tweet('abc')
+            assert False
+        except Exception as e:
+            self.assertIsInstance(e, KeyError)
+
+    @httpretty.activate
+    def test_oembed_tweet_valid_id_app_debug_on_override(self):
+        self.app.config['DEBUG'] = True
+        self.twitter_oembedder.init(self.app, self.cache, debug=False)
+        with open('tests/data/99530515043983360.json') as f:
+            httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=99530515043983360',
+                body = f.read())
+        response = self.client.get('/')
+        oembed_tweet = self.get_context_variable('oembed_tweet')
+        valid = oembed_tweet('99530515043983360')
+        self.assertIsInstance(valid, Markup)
+
+    @httpretty.activate
+    def test_oembed_tweet_invalid_id_app_debug_on_override(self):
+        self.app.config['DEBUG'] = True
+        self.twitter_oembedder.init(self.app, self.cache, debug=False)
+        with open('tests/data/abc.json') as f:
+            httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=abc',
+                body = f.read())
+        response = self.client.get('/')
+        oembed_tweet = self.get_context_variable('oembed_tweet')
+        invalid = oembed_tweet('abc')
+        self.assertIs(invalid,'')
